@@ -28,13 +28,16 @@ The following use-case statements are your guide to help you align your intentio
 ### Players
 - *Project Lead* - **Zyx (taongnyebe)**
 - *Data Analyst* - **Ernie Martin A. Munar(ErnieM02)**
-- *Data Analyst* - ****
-- *Developer* - ****
-- *Developer* - ****
+- *Data Analyst* - **marscreative()**
+- *Developer* - **QuasarCodeGeek(Jayce Sayer)**
+- *Developer* - **(Conan0910)**
 
 ### Project
+>> Quality Sorting of Crops and Fruits
 #### Project Plan Summary
 
 #### Project Highlights
 
-###
+#### Project Description
+- 
+
