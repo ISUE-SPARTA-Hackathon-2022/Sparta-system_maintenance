@@ -26,11 +26,11 @@ The following use-case statements are your guide to help you align your intentio
 18. How can DSA be marketed as an opportunity to design/invent digital infrastructures for agriculture?"
 
 ### Players
-*Project Lead* - **Zyx (taongnyebe)**
-*Data Analyst* - **Ernie Martin A. Munar(ErnieM02)**
-*Data Analyst* - ****
-*Developer* - ****
-*Developer* - ****
+- *Project Lead* - **Zyx (taongnyebe)**
+- *Data Analyst* - **Ernie Martin A. Munar(ErnieM02)**
+- *Data Analyst* - ****
+- *Developer* - ****
+- *Developer* - ****
 
 ### Project
 #### Project Plan Summary
