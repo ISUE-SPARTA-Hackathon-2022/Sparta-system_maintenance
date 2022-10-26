@@ -6,24 +6,24 @@ Blessed with agricultural wealth and hardworking people, Cauayan City aspires to
 
 The following use-case statements are your guide to help you align your intention in addressing areas of this challenge:
 
-a. How can D&T aid in developing cost-effective blueprints for regional organizations in addressing yield expansion?
-b. How can DSA help the LGU identify the appropriate agri-machinery necessary to address excessive yield loss and organize farmers to expose themselves to such innovation?
-c. How can DSA help narrow the gap between the government and farmers in the adoption of new agricultural innovations?
-d. How can D&T support business groups and NGOs in alleviating farmers with inadequate resources?
-e. How can DSA be utilized in developing smarter farming techniques and establishing post-harvest facilities to increase yield and attract investors to sustain the needs of the sector in LGU?
-f. How can DSA emphasize the significance of smarter farm machinery and post-harvest facilities to convene business opportunities for Civil Societies to support local capabilities?
-g. How can D&T assist in monitoring the effects of climate change on the seasonal yield of farmers?
-h. How can DSA help the LGU prevent more agricultural losses when calamities hit communities and other vulnerable areas?
-i. How can data be utilized to develop digital infrastructures that will notify the LGU of any threats and agricultural significance that may arise along the way?
-j. How can D&T provide figures for effective farming techniques using sustainable equipment and facilities?
-k. How can DSA be a way to develop smarter sustainable solutions and post-harvest facilities to help achieve long-term impacts?
-l. How can DSA assist the LGU in developing more sustainable farm machinery and post-harvest facilities that are accessible for farmers and will not displace them from the farmlands with such development?"
-m. How can D&T adapt statistics in measuring food production?
-n. How can DSA help the LGU resolve inaccessibility to innovative farm machinery and facilities and pursue digital solutions to agricultural self-sufficiency?
-o. How can DSA assist LGU in the development of agricultural machinery and other significant infrastructure targeting food insecurity?
-p. How can D&T educate farmers in using different techniques to increase its harvest and yield?
-q. How can LGU encourage the youth and other local experts to utilize existing data sets and develop innovations to house job opportunities in the agricultural sector?
-r. How can DSA be marketed as an opportunity to design/invent digital infrastructures for agriculture?"
+1. How can D&T aid in developing cost-effective blueprints for regional organizations in addressing yield expansion?
+2. How can DSA help the LGU identify the appropriate agri-machinery necessary to address excessive yield loss and organize farmers to expose themselves to such innovation?
+3. How can DSA help narrow the gap between the government and farmers in the adoption of new agricultural innovations?
+4. How can D&T support business groups and NGOs in alleviating farmers with inadequate resources?
+5. How can DSA be utilized in developing smarter farming techniques and establishing post-harvest facilities to increase yield and attract investors to sustain the needs of the sector in LGU?
+6. How can DSA emphasize the significance of smarter farm machinery and post-harvest facilities to convene business opportunities for Civil Societies to support local capabilities?
+7. How can D&T assist in monitoring the effects of climate change on the seasonal yield of farmers?
+8. How can DSA help the LGU prevent more agricultural losses when calamities hit communities and other vulnerable areas?
+9. How can data be utilized to develop digital infrastructures that will notify the LGU of any threats and agricultural significance that may arise along the way?
+10. How can D&T provide figures for effective farming techniques using sustainable equipment and facilities?
+11. How can DSA be a way to develop smarter sustainable solutions and post-harvest facilities to help achieve long-term impacts?
+12. How can DSA assist the LGU in developing more sustainable farm machinery and post-harvest facilities that are accessible for farmers and will not displace them from the farmlands with such development?"
+13. How can D&T adapt statistics in measuring food production?
+14. How can DSA help the LGU resolve inaccessibility to innovative farm machinery and facilities and pursue digital solutions to agricultural self-sufficiency?
+15. How can DSA assist LGU in the development of agricultural machinery and other significant infrastructure targeting food insecurity?
+16. How can D&T educate farmers in using different techniques to increase its harvest and yield?
+17. How can LGU encourage the youth and other local experts to utilize existing data sets and develop innovations to house job opportunities in the agricultural sector?
+18. How can DSA be marketed as an opportunity to design/invent digital infrastructures for agriculture?"
 
 ### Players
 *Project Lead* - **Zyx (taongnyebe)**
