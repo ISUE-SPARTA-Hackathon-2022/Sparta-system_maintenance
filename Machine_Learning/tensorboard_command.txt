@@ -1,5 +1,5 @@
 Activate the Environment first:
-.Sparta\Scripts\activate
+.\Sparta\Scripts\activate
 
 Call the Folder where the Log is saved
 tensorboard --logdir (dir ex. ./log/TLF)
