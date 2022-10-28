@@ -1,5 +1,0 @@
-Activate the Environment first:
-.venv\Scripts\activate
-
-Call the Folder where the Log is saved
-tensorboard --logdir (dir ex. ./log/TLF)
