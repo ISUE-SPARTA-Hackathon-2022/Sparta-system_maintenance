@@ -4,15 +4,28 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <script src="js/bootstrap.min.js"></script>
     <title>Document</title>
+    <style>
+        body {
+            font-family: 'Ubuntu', sans-serif;
+        }
+        .gradient {
+            background: linear-gradient(to left, rgb(66, 66, 107, 0.65), rgb(255, 181, 44)), url('asset/crops.jpg');
+            background-size: cover;
+        }
+
+    </style>
 </head>
 <body>
-    <div class="container bg bg-info p-2 bg-gradient">
+    <div class="container p-2 gradient">
         <div class="row mx-auto">
             <div class="col-6 p-2">
-                <div class="MediaDevice row mx-auto h-100 rounded ratio ratio-4x3" style="background-color: rgba(80, 80, 126, 0.668);">
+                <div class="MediaDevice row mx-auto h-100 rounded ratio ratio-4x3" style="background-color: rgba(80, 80, 126, 0.65);">
                     <video id="vid" class="rounded"></video><br>
                 </div>
             </div>
