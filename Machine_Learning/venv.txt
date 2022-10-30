@@ -1,17 +1,26 @@
+# initialized a environment
 python -m venv Sparta
 
+# Activate the environment and use it
 .\Sparta\scripts\Activate
 
+# upgrade pip into most recent update to use all updated libraries
 python -m pip install --upgrade pip
 
+# library to install kernel for virtual environment
 python -m pip install ipykernel
 
+# use to create a kernel into system for the virtual environment
 python -m ipykernel install --user --name=Sparta
 
-
+# Libraries to be used
 python -m pip install tensorflow-gpu
 python -m pip install pandas
 python -m pip install numpy
 python -m pip install matplotlib
 python -m pip install sklearn
 python -m pip install pydot
+python -m pip install tensorflowjs
+
+# install graphiz 
+https://graphviz.gitlab.io/download/

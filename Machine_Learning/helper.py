@@ -490,14 +490,14 @@ class helper:
         _helper = helper()
         _helper.notifications.error()
 #------------------------------------------------------------------------------
-    def checkpoint_callback(self, dir:str, name:str, monitor: str = "val_loss",
+    def checkpoint_callback(self, dir:str, name:str, monitor: str = "loss",
                             sbo: bool = False, swo: bool = False, sf: str = "epoch"):
       """Set checkpoint callback to be used in fit function of model
 
       Args:
           dir (str): Where to save.
           name (str): File name.
-          monitor (str, optional): Key to monitor which to saved as checkpoint. Defaults to "val_loss".
+          monitor (str, optional): Key to monitor which to saved as checkpoint. Defaults to "loss".
           sbo (bool, optional): Save Best Only. Defaults to False.
           swo (bool, optional): Save Weight Only. Defaults to False.
           sf (str, optional): Frequency of saving. Defaults to "epoch".
