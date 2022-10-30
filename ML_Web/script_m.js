@@ -1,115 +1,183 @@
-const video = document.getElementById('webcam');
-const liveView = document.getElementById('liveView');
-const demosSection = document.getElementById('demos');
-const enableWebcamButton = document.getElementById('webcamButton');
+const STATUS = document.getElementById('status');
+const VIDEO = document.getElementById('webcam');
+const ENABLE_CAM_BUTTON = document.getElementById('enableCam');
+const RESET_BUTTON = document.getElementById('reset');
+const TRAIN_BUTTON = document.getElementById('train');
+const MOBILE_NET_INPUT_WIDTH = 224;
+const MOBILE_NET_INPUT_HEIGHT = 224;
+const STOP_DATA_GATHER = -1;
+const CLASS_NAMES = [];
 
-// Check if webcam access is supported.
-function getUserMediaSupported() {
-  return !!(navigator.mediaDevices &&
-    navigator.mediaDevices.getUserMedia);
+ENABLE_CAM_BUTTON.addEventListener('click', enableCam);
+TRAIN_BUTTON.addEventListener('click', trainAndPredict);
+RESET_BUTTON.addEventListener('click', reset);
+
+let mobilenet = undefined;
+let gatherDataState = STOP_DATA_GATHER;
+let videoPlaying = false;
+let trainingDataInputs = [];
+let trainingDataOutputs = [];
+let examplesCount = [];
+let predict = false;
+
+function hasGetUserMedia() {
+  return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
 }
 
-// If webcam supported, add event listener to button for when user
-// wants to activate it to call enableCam function which we will 
-// define in the next step.
-if (getUserMediaSupported()) {
-  enableWebcamButton.addEventListener('click', enableCam);
-} else {
-  console.warn('getUserMedia() is not supported by your browser');
-}
+function enableCam() {
+  if (hasGetUserMedia()) {
+    // getUsermedia parameters.
+    const constraints = {
+      video: true,
+      width: 640, 
+      height: 480 
+    };
 
-// Enable the live webcam view and start classification.
-function enableCam(event) {
-  // Only continue if the COCO-SSD has finished loading.
-  console.log("check model");
-  if (!model) {
-    return;
+    // Activate the webcam stream.
+    navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
+      VIDEO.srcObject = stream;
+      VIDEO.addEventListener('loadeddata', function() {
+        videoPlaying = true;
+        ENABLE_CAM_BUTTON.classList.add('removed');
+      });
+    });
+  } else {
+    console.warn('getUserMedia() is not supported by your browser');
   }
-  
-  // Hide the button once clicked.
-  event.target.classList.add('removed');  
-  
-  // getUsermedia parameters to force video but not audio.
-  const constraints = {
-    video: true
-  };
+}
 
-  // Activate the webcam stream.
-  navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
-    video.srcObject = stream;
-    video.addEventListener('loadeddata', predictWebcam);
+async function trainAndPredict() {
+  predict = false;
+  tf.util.shuffleCombo(trainingDataInputs, trainingDataOutputs);
+  let outputsAsTensor = tf.tensor1d(trainingDataOutputs, 'int32');
+  let oneHotOutputs = tf.oneHot(outputsAsTensor, CLASS_NAMES.length);
+  let inputsAsTensor = tf.stack(trainingDataInputs);
+  
+  let results = await model.fit(inputsAsTensor, oneHotOutputs, {shuffle: true, batchSize: 5, epochs: 10, 
+      callbacks: {onEpochEnd: logProgress} });
+  
+  outputsAsTensor.dispose();
+  oneHotOutputs.dispose();
+  inputsAsTensor.dispose();
+  predict = true;
+  predictLoop();
+}
+
+function logProgress(epoch, logs) {
+  console.log('Data for epoch ' + epoch, logs);
+}
+
+function predictLoop() {
+  if (predict) {
+    tf.tidy(function() {
+      let videoFrameAsTensor = tf.browser.fromPixels(VIDEO).div(255);
+      let resizedTensorFrame = tf.image.resizeBilinear(videoFrameAsTensor,[MOBILE_NET_INPUT_HEIGHT, 
+          MOBILE_NET_INPUT_WIDTH], true);
+
+      let imageFeatures = mobilenet.predict(resizedTensorFrame.expandDims());
+      let prediction = model.predict(imageFeatures).squeeze();
+      let highestIndex = prediction.argMax().arraySync();
+      let predictionArray = prediction.arraySync();
+
+      STATUS.innerText = 'Prediction: ' + CLASS_NAMES[highestIndex] + ' with ' + Math.floor(predictionArray[highestIndex] * 100) + '% confidence';
+    });
+
+    window.requestAnimationFrame(predictLoop);
+  }
+}
+
+/**
+ * Purge data and start over. Note this does not dispose of the loaded 
+ * MobileNet model and MLP head tensors as you will need to reuse 
+ * them to train a new model.
+ **/
+ function reset() {
+  predict = false;
+  examplesCount.length = 0;
+  for (let i = 0; i < trainingDataInputs.length; i++) {
+    trainingDataInputs[i].dispose();
+  }
+  trainingDataInputs.length = 0;
+  trainingDataOutputs.length = 0;
+  STATUS.innerText = 'No data collected';
+  
+  console.log('Tensors in memory: ' + tf.memory().numTensors);
+}
+
+let dataCollectorButtons = document.querySelectorAll('button.dataCollector');
+for (let i = 0; i < dataCollectorButtons.length; i++) {
+  dataCollectorButtons[i].addEventListener('mousedown', gatherDataForClass);
+  dataCollectorButtons[i].addEventListener('mouseup', gatherDataForClass);
+  // Populate the human readable names for classes.
+  CLASS_NAMES.push(dataCollectorButtons[i].getAttribute('data-name'));
+}
+
+/**
+ * Handle Data Gather for button mouseup/mousedown.
+ **/
+ function gatherDataForClass() {
+  let classNumber = parseInt(this.getAttribute('data-1hot'));
+  gatherDataState = (gatherDataState === STOP_DATA_GATHER) ? classNumber : STOP_DATA_GATHER;
+  dataGatherLoop();
+}
+
+function dataGatherLoop() {
+  if (videoPlaying && gatherDataState !== STOP_DATA_GATHER) {
+    let imageFeatures = tf.tidy(function() {
+      let videoFrameAsTensor = tf.browser.fromPixels(VIDEO);
+      let resizedTensorFrame = tf.image.resizeBilinear(videoFrameAsTensor, [MOBILE_NET_INPUT_HEIGHT, 
+          MOBILE_NET_INPUT_WIDTH], true);
+      let normalizedTensorFrame = resizedTensorFrame.div(255);
+      return mobilenet.predict(normalizedTensorFrame.expandDims()).squeeze();
+    });
+
+    trainingDataInputs.push(imageFeatures);
+    trainingDataOutputs.push(gatherDataState);
+    
+    // Intialize array index element if currently undefined.
+    if (examplesCount[gatherDataState] === undefined) {
+      examplesCount[gatherDataState] = 0;
+    }
+    examplesCount[gatherDataState]++;
+
+    STATUS.innerText = '';
+    for (let n = 0; n < CLASS_NAMES.length; n++) {
+      STATUS.innerText += CLASS_NAMES[n] + ' data count: ' + examplesCount[n] + '. ';
+    }
+    window.requestAnimationFrame(dataGatherLoop);
+  }
+}
+
+async function loadMobileNetFeatureModel() {
+  const URL = 
+    'https://tfhub.dev/google/tfjs-model/imagenet/mobilenet_v3_small_100_224/feature_vector/5/default/1';
+  
+  mobilenet = await tf.loadGraphModel(URL, {fromTFHub: true});
+  STATUS.innerText = 'MobileNet v3 loaded successfully!';
+  
+  // Warm up the model by passing zeros through it once.
+  tf.tidy(function () {
+    let answer = mobilenet.predict(tf.zeros([1, MOBILE_NET_INPUT_HEIGHT, MOBILE_NET_INPUT_WIDTH, 3]));
+    console.log(answer.shape);
   });
 }
 
-// Specify location of our Model.json file we uploaded to the Glitch.com CDN.
-const MODEL_URL = './JS/model.json';
-var model;
-var yay;
+let model = tf.sequential();
+model.add(tf.layers.dense({inputShape: [1024], units: 128, activation: 'relu'}));
+model.add(tf.layers.dense({units: CLASS_NAMES.length, activation: 'softmax'}));
 
-// Before we can use COCO-SSD class we must wait for it to finish
-// loading. Machine Learning models can be large and take a moment 
-// to get everything needed to run.
-// Note: cocoSsd is an external object loaded from our index.html
-// script tag import so ignore any warning in Glitch.
-cocoSsd.load().then(function (loadedModel) {
-  yay = loadedModel;
-  // Show demo section now model is ready to use.
-  demosSection.classList.remove('invisible');
+model.summary();
+
+// Compile the model with the defined optimizer and specify a loss function to use.
+model.compile({
+  // Adam changes the learning rate over time which is useful.
+  optimizer: 'adam',
+  // Use the correct loss function. If 2 classes of data, must use binaryCrossentropy.
+  // Else categoricalCrossentropy is used if more than 2 classes.
+  loss: (CLASS_NAMES.length === 2) ? 'binaryCrossentropy': 'categoricalCrossentropy', 
+  // As this is a classification problem you can record accuracy in the logs too!
+  metrics: ['accuracy']  
 });
 
-// Create an asynchronous function.
-async function run() {
-    // Load the model from the CDN.
-    model = await tf.loadLayersModel(MODEL_URL);
-
-    // Print out the architecture of the loaded model.
-    // This is useful to see that it matches what we built in Python.
-    console.log(model.summary());
-}
-
-// Call our function to start the prediction!
-run();
-
-var children = [];
-
-function predictWebcam() {
-  console.log("here");
-  // Now let's start classifying a frame in the stream.
-  model.detect(video).then(function (predictions) {
-    // Remove any highlighting we did previous frame.
-    for (let i = 0; i < children.length; i++) {
-      liveView.removeChild(children[i]);
-    }
-    children.splice(0);
-    
-    // Now lets loop through predictions and draw them to the live view if
-    // they have a high confidence score.
-    for (let n = 0; n < predictions.length; n++) {
-      // If we are over 66% sure we are sure we classified it right, draw it!
-      if (predictions[n].score > 0.66) {
-        const p = document.createElement('p');
-        p.innerText = predictions[n].class  + ' - with ' 
-            + Math.round(parseFloat(predictions[n].score) * 100) 
-            + '% confidence.';
-        p.style = 'margin-left: ' + predictions[n].bbox[0] + 'px; margin-top: '
-            + (predictions[n].bbox[1] - 10) + 'px; width: ' 
-            + (predictions[n].bbox[2] - 10) + 'px; top: 0; left: 0;';
-
-        const highlighter = document.createElement('div');
-        highlighter.setAttribute('class', 'highlighter');
-        highlighter.style = 'left: ' + predictions[n].bbox[0] + 'px; top: '
-            + predictions[n].bbox[1] + 'px; width: ' 
-            + predictions[n].bbox[2] + 'px; height: '
-            + predictions[n].bbox[3] + 'px;';
-
-        liveView.appendChild(highlighter);
-        liveView.appendChild(p);
-        children.push(highlighter);
-        children.push(p);
-      }
-    }
-    
-    // Call this function again to keep predicting when the browser is ready.
-    window.requestAnimationFrame(predictWebcam);
-  });
-}
+// Call the function immediately to start loading.
+loadMobileNetFeatureModel();
