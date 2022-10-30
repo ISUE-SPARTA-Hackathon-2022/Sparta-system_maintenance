@@ -3,11 +3,11 @@
 const status = document.getElementById('status');
 status.innerText = 'Loaded TensorFlow.js - version: ' + tf.version.tfjs;
 
-// Specify location of our Model.json file we uploaded to the Glitch.com CDN.
-const MODEL_URL = './JS/model.json';
 // Specify a test value we wish to use in our prediction.
 // Here we use 950, so we expect the result to be close to 950,000.
 const TEST_VALUE = 950.0
+// Specify location of our Model.json file we uploaded to the Glitch.com CDN.
+const MODEL_URL = './JS/model.json';
 
 // Create an asynchronous function.
 async function run() {

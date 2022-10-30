@@ -45,7 +45,7 @@
       }
     }
   }, 
-  "weightsManifest": [{"paths": ["./JS/group1-shard1of1.bin"], 
+  "weightsManifest": [{"paths": ["./group1-shard1of1.bin"], 
     "weights": [{"name": "dense/kernel", 
         "shape": [1, 1], 
         "dtype": "float32"}, 
