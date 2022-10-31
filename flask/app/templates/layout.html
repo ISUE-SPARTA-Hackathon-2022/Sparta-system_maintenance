@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./static/css/bootstrap.min.css">
+    <script src="./static/js/bootstrap.min.js"></script>
+    <title>yay!</title>
+    <style>
+        body {
+            font-family: 'Ubuntu', sans-serif;
+        }
+        .gradient {
+            background: linear-gradient(to left, rgb(66, 66, 107, 0.65), rgb(255, 181, 44)), url('./static/asset/crops.jpg');
+            background-size: cover;
+        }
+
+    </style>
+</head>
+<body>
+  
+  {% block content %}
+  {% endblock %}
+    <!-- Import TensorFlow.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.11.0/dist/tf.min.js" type="text/javascript"></script>
+    <script src="./static/js/ml.js"></script>
+</body>
+</html>
