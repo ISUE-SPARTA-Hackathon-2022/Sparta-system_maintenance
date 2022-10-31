@@ -19,7 +19,7 @@ let predict = false;
 async function loadMobileNetFeatureModel() {
   console.log(window.location.href);
   
-  custom_model = await tf.loadLayersModel('localstorage://app/static/');
+  custom_model = await tf.loadLayersModel('/static/asset/ml/model.json');
   STATUS.innerText = 'by: system_maintenance';
   
   // Warm up the model by passing zeros through it once.
@@ -41,8 +41,8 @@ async function predictLoop() {
       let highestIndex = prediction.argMax().arraySync();
       let predictionArray = prediction.arraySync();
 
+      STATUS.innerText = 'Prediction: ' + CLASS_NAMES[highestIndex] + ' with ' + Math.floor(predictionArray[highestIndex] * 100) + '% confidence';
       ML_CLASS.innerText = CLASS_NAMES[highestIndex];
-      // confidence Math.floor(predictionArray[highestIndex] * 100)
     });
 
     window.requestAnimationFrame(predictLoop);
